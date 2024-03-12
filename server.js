@@ -5,16 +5,9 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://teamwork3:1965eld@cluster0.ppzbp33.mongodb.net/', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  createIndexes: true, // Replace useCreateIndex with createIndexes
-});
-const db = mongoose.connection;
-db.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1); // Exit the process if unable to connect to MongoDB
-});
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log(err));
 
 // Create Express App
 const app = express();
