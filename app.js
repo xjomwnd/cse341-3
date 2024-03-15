@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 
-// Import routes
-const contactsRouter = require('./routes/contacts');
+// Import the contacts controller
+const contactsController = require('./controllers/contacts');
 
 // Middleware
 app.use(express.json());
 
-// Use routes
-app.use('/contacts', contactsRouter);
+// Use the contacts controller
+app.use('/contacts', contactsController);
 
 // Start server
 const PORT = process.env.PORT || 3000;
