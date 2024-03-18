@@ -1,30 +1,38 @@
+// Import necessary modules
 const express = require('express');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
-const googleStrategy = require('./auth/googleStrategy');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://teamwork3:1965eld@cluster0.ppzbp33.mongodb.net/', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
-
-// Create Express App
+// Initialize Express app
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: true }));
+// Configure session middleware
+app.use(session({ 
+  secret: 'your-secret-key', 
+  resave: false, 
+  saveUninitialized: true 
+}));
+
+// Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport configuration
-passport.use(googleStrategy);
+// Configure Google OAuth 2.0 strategy
+passport.use(new GoogleStrategy({
+    clientID: 'your-client-id',
+    clientSecret: 'your-client-secret',
+    callbackURL: 'http://localhost:3000/auth/google/callback'
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // This is where you handle the user's authentication
+    // For example, you might save the user to a database
+    console.log(profile);
+    return done(null, profile);
+  }
+));
 
-// Serialize and deserialize user
+// Configure serialization and deserialization of user
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -33,31 +41,14 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-// Define Routes
-// Google OAuth routes
+// Define routes for Google OAuth
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
-
-app.get(
-  '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication, redirect or respond with user data
-    res.redirect('/dashboard');
-  }
-);
-
-// Example route
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+  // Successful authentication, redirect or respond with user data
+  res.redirect('/dashboard');
 });
 
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-
-// Start the Server
+// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
