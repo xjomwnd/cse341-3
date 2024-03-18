@@ -1,6 +1,6 @@
 const { body, validationResult } = require('express-validator');
 
-exports.validateUser = [
+const validateUser = [
   body('name')
     .notEmpty()
     .withMessage('Name is required')
@@ -12,19 +12,10 @@ exports.validateUser = [
     .isEmail()
     .withMessage('Invalid email address'),
   // Add more validation rules as needed
-];
-
-// utils/validation.js
-const { body, validationResult } = require('express-validator');
-
-const validateUser = [
-  body('name').notEmpty().withMessage('Name is required'),
-  body('email').isEmail().withMessage('Invalid email address'),
-  // Add more validation rules as needed
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return next(new ValidationError(errors.array()));
+      return res.status(400).json({ errors: errors.array() });
     }
     next();
   },
