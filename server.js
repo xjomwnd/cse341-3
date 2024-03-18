@@ -9,7 +9,7 @@ const mongoose = require('mongoose'); // Import Mongoose
 const app = express();
 
 // Connect to MongoDB database
-mongoose.connect('mongodb+srv://teamwork3:1965eld@cluster0.ppzbp33.mongodb.net/your-database-name', {
+mongoose.connect('mongodb+srv://teamwork3:1965eld@cluster0.ppzbp33.mongodb.net/', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
