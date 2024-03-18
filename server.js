@@ -3,9 +3,18 @@ const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose'); // Import Mongoose
 
 // Initialize Express app
 const app = express();
+
+// Connect to MongoDB database
+mongoose.connect('mongodb://localhost:27017/your-database-name', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.error('MongoDB Connection Error:', err));
 
 // Configure session middleware
 app.use(session({ 
