@@ -3,7 +3,7 @@ const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const mongoose = require('mongoose'); // Import Mongoose
+const mongoose = require('mongoose');
 
 // Initialize Express app
 const app = express();
@@ -14,7 +14,10 @@ mongoose.connect('mongodb://localhost:27017/your-database-name', {
   useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB Connected'))
-.catch(err => console.error('MongoDB Connection Error:', err));
+.catch(err => {
+  console.error('MongoDB Connection Error:', err);
+  process.exit(1); // Exit process with failure if unable to connect to MongoDB
+});
 
 // Configure session middleware
 app.use(session({ 
