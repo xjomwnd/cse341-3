@@ -1,30 +1,15 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const User = require('./models/User'); // Example path to your User model
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
+passport.use(new GoogleStrategy({
+    clientID: 'your_client_id',
+    clientSecret: 'your_client_secret',
+    callbackURL: 'http://localhost:3000/auth/google/callback'
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // Verify user and create or retrieve user in the database
+    // Call done() with user object
   }
 ));
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
 
 module.exports = passport;
