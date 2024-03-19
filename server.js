@@ -1,60 +1,104 @@
-// Import necessary modules
+// Import required modules
 const express = require('express');
-const passport = require('passport');
+const bodyParser = require('body-parser');
 const session = require('express-session');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const GitHubStrategy = require('passport-github2').Strategy;
-const mongoose = require('mongoose');
+const passport = require('passport');
+const OAuth2Strategy = require('passport-oauth2').Strategy;
+const mongoose = require('mongoose'); // Import Mongoose
+const cors = require('cors');
 
-// Import Mongoose
 // Initialize Express app
 const app = express();
+
+// Middleware for parsing JSON bodies
+app.use(bodyParser.json());
+
+// Middleware for handling sessions
+app.use(session({
+  secret: 'your_secret_key', // Change this to a secure secret key
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Middleware for Passport session
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Middleware for setting headers
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json'); // Example header
+  next();
+});
+
+// Middleware for enabling CORS
+app.use(cors());
 
 // Connect to MongoDB database
 mongoose.connect('mongodb+srv://teamwork3:1965eld@cluster0.ppzbp33.mongodb.net/')
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB Connection Error:', err));
 
-// Configure session middleware
-app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: true }));
+// Dummy data for demonstration
+let users = [
+  { id: 1, name: 'User 1' },
+  { id: 2, name: 'User 2' },
+  { id: 3, name: 'User 3' }
+];
 
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Configure Google OAuth 2.0 strategy
-passport.use(new GoogleStrategy({
-  clientID: 'your-client-id',
-  clientSecret: 'your-client-secret',
-  callbackURL: 'http://localhost:3000/auth/google/callback'
-}, (accessToken, refreshToken, profile, done) => {
-  // This is where you handle the user's authentication
-  // For example, you might save the user to a database
-  console.log(profile);
-  return done(null, profile);
+// Passport OAuth2 strategy configuration
+passport.use(new OAuth2Strategy({
+  authorizationURL: 'https://oauth2-provider.com/auth',
+  tokenURL: 'https://oauth2-provider.com/token',
+  clientID: 'your_client_id',
+  clientSecret: 'your_client_secret',
+  callbackURL: 'http://localhost:3000/callback'
+},
+function(accessToken, refreshToken, profile, cb) {
+  // Dummy user profile retrieval
+  const user = users.find(user => user.id === profile.id);
+  return cb(null, user);
 }));
 
-// Configure serialization and deserialization of user
+// Serialize and deserialize user functions for Passport
 passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  const user = users.find(user => user.id === id);
   done(null, user);
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
-// Define routes for Google OAuth
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
-
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-  // Successful authentication, redirect or respond with user data
-  res.redirect('/dashboard');
-});
-
-// Define a route for the root URL
+// Routes
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('OAuth2 Server');
 });
+
+app.get('/profile', ensureAuthenticated, (req, res) => {
+  res.json(req.user);
+});
+
+app.post('/profile', ensureAuthenticated, (req, res) => {
+  // Update user profile (example)
+  const { name } = req.body;
+  req.user.name = name;
+  res.json(req.user);
+});
+
+app.delete('/profile', ensureAuthenticated, (req, res) => {
+  // Delete user profile (example)
+  users = users.filter(user => user.id !== req.user.id);
+  req.logout(); // Logout the user
+  res.send('User profile deleted');
+});
+
+// Middleware to ensure user is authenticated
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).send('Unauthorized');
+}
 
 // Start the server
 const PORT = process.env.PORT || 3000;
