@@ -102,6 +102,12 @@ function ensureAuthenticated(req, res, next) {
   res.status(401).send('Unauthorized');
 }
 
+// Define a route for the root URL
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
