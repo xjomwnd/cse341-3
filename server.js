@@ -6,6 +6,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose'); // Import Mongoose
 const cors = require('cors');
+const passport = require('./passport-setup.js');
 
 // Initialize Express app
 const app = express();
