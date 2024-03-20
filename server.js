@@ -10,6 +10,18 @@ const cors = require('cors');
 // Initialize Express app
 const app = express();
 
+// Passport setup
+passport.use(new GoogleStrategy({
+  clientID: 'YOUR_CLIENT_ID',
+  clientSecret: 'YOUR_CLIENT_SECRET',
+  callbackURL: '/auth/google/callback'
+},
+(accessToken, refreshToken, profile, done) => {
+  // You can perform user database operations here or return the user profile
+  return done(null, profile);
+}
+));
+
 // Middleware for parsing JSON bodies
 app.use(bodyParser.json());
 
