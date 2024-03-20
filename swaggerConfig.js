@@ -6,24 +6,19 @@ const options = {
     info: {
       title: 'Your API Documentation',
       version: '1.0.0',
-      description: 'API documentation for your application',
+      description: 'This is the updated API description.', // Changed the API description
     },
     securityDefinitions: {
-      // Define security scheme for OAuth2
-      OAuth2: {
-        type: 'oauth2',
-        authorizationUrl: 'https://your-auth-provider.com/oauth2/authorize',
-        flow: 'implicit',
-        scopes: {
-          // Define scopes if required
-          read: 'Grants read access',
-          write: 'Grants write access',
-        },
+      // Define security scheme for API Key
+      APIKey: {
+        type: 'apiKey',
+        in: 'header',
+        name: 'X-API-Key',
       },
     },
-    security: [{ OAuth2: [] }], // Mark all paths as secured by default
+    security: [{ APIKey: [] }], // Mark all paths as secured by default
   },
-  apis: ['./routes/*.js'], // Path to the API routes files
+  apis: ['./routes/**/*.js'], // Updated path to include nested route files
 };
 
 // Initialize swagger-jsdoc
