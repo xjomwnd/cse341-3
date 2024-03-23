@@ -5,8 +5,10 @@ const session = require('express-session');
 const passport = require('passport');
 const OAuth2Strategy = require('passport-oauth2').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // Import Mongoose
 const cors = require('cors');
+
+
 
 // Initialize Express app
 const app = express();
@@ -27,7 +29,7 @@ app.use(passport.session());
 
 // Middleware for setting headers
 app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/json'); // Example header
   next();
 });
 
@@ -53,7 +55,8 @@ passport.use(new OAuth2Strategy({
   clientID: 'your_client_id',
   clientSecret: 'your_client_secret',
   callbackURL: 'http://localhost:3000/callback'
-}, function(accessToken, refreshToken, profile, cb) {
+},
+function(accessToken, refreshToken, profile, cb) {
   // Dummy user profile retrieval
   const user = users.find(user => user.id === profile.id);
   return cb(null, user);
