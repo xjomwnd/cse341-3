@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const url = 'mongodb://localhost/appDBex'
+const contacts = require('./routes/app.js');
 
 
 const app = express();
