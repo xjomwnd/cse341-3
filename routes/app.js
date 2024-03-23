@@ -1,12 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const contacts = require('./routes/app.js');
-
 
 const app = express();
 
 // Import the contacts controller
-const contactsController = require('./routes/contact'); // Adjusted the file name here
+const contactsController = require('./routes/app'); // Adjusted the file name here
 
 // Middleware
 app.use(express.json());
