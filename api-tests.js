@@ -1,7 +1,8 @@
 const axios = require('axios');
 
+
 // Base URL for your API
-const baseURL = 'https://api.example.com';
+const baseURL = 'http://localhost:3000/api/contacts';
 
 // Function to test GET endpoint
 async function testGetEndpoint() {
