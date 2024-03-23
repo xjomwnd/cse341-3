@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-
-const app = express();
-
 // Base URL for your API
 const baseURL = 'https://api.example.com';
 
