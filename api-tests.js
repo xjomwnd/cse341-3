@@ -10,14 +10,10 @@ async function testGetEndpoint() {
     console.log('GET /api/users response:', response.data);
   } catch (error) {
     if (error.response) {
-      // The request was made, but the server responded with a status code
-      // outside the range of 2xx
       console.error('Error testing GET /api/users:', error.response.data);
     } else if (error.request) {
-      // The request was made, but no response was received
       console.error('No response received for GET /api/users');
     } else {
-      // Something happened in setting up the request that triggered an error
       console.error('Error setting up GET /api/users request:', error.message);
     }
   }
@@ -45,8 +41,8 @@ async function testPostEndpoint() {
 
 // Function to test PUT endpoint
 async function testPutEndpoint() {
+  const userId = '1234'; // Move the userId declaration outside the try block
   try {
-    const userId = '1234';
     const payload = {
       name: 'Jane Smith',
       email: 'jane.smith@example.com',
@@ -66,8 +62,8 @@ async function testPutEndpoint() {
 
 // Function to test DELETE endpoint
 async function testDeleteEndpoint() {
+  const userId = '5678'; // Move the userId declaration outside the try block
   try {
-    const userId = '5678';
     const response = await axios.delete(`${baseURL}/api/users/${userId}`);
     console.log(`DELETE /api/users/${userId} response:`, response.data);
   } catch (error) {
