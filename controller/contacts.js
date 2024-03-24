@@ -1,4 +1,4 @@
-// contactsController.js
+// contacts.js
 
 // Sample data for demonstration purposes
 let contacts = [
