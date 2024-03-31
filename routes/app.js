@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 
 // Import the contacts controller
-const contactsController = require('./routes/app'); // Adjusted the file name here
+const contactsController = require('./app'); // Adjusted the file name here
 
 // Middleware
 app.use(express.json());
