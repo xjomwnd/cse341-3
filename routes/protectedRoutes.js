@@ -1,7 +1,10 @@
-// Example route protected with Passport
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  (req, res) => {
-    res.send(`Hello, ${req.user.displayName}`);
-  }
-);
+const express = require('express');
+const router = express.Router();
+
+// Define routes
+router.get('/profile', (req, res) => {
+  // Handle request for profile route
+  res.send('Profile route');
+});
+
+module.exports = router;
