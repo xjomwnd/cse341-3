@@ -1,15 +1,30 @@
-// Enable authentication
-db.getSiblingDB("admin").runCommand({
-  setParameter: 1,
-  authenticationMechanisms: {
-    plain: 'mongodb_cr',
-    'SCRAM-SHA-1': 'scram-sha-1'
-  }
-});
+const { MongoClient } = require('mongodb');
 
-// Create an administrative user
-db.getSiblingDB("admin").createUser({
-  user: "adminUser",
-  pwd: "adminPassword",
-  roles: ["userAdminAnyDatabase", "dbAdminAnyDatabase", "readWriteAnyDatabase", "clusterAdmin"]
+// Connection URI
+const uri = 'mongodb://localhost:27017';
+
+// Create a new MongoClient
+const client = new MongoClient(uri);
+
+// Connect to the MongoDB server
+client.connect(err => {
+  if (err) {
+    console.error('Error connecting to MongoDB:', err);
+    return;
+  }
+
+  // Once connected, you can use the database object
+  const db = client.db('your-database-name');
+  
+  // Now you can perform operations using `db` object
+  db.collection('your-collection-name').findOne({ /* query */ }, (err, result) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return;
+    }
+    console.log(result);
+  });
+
+  // Don't forget to close the connection when done
+  client.close();
 });
