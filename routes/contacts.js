@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const contactsController = require('./contacts');
-
-router.get('/', contactsController.getAll);
-router.get('/:id', contactsController.getSingle);
-router.post('/', contactsController.createContact);
-router.put('/:id', contactsController.updateContact);
-router.delete('/:id', contactsController.deleteContact);
+// Define a route with a callback function
+router.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 module.exports = router;
